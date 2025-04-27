@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,12 +28,34 @@ export default function CoverLetterGenerator() {
     }
   });
 
+  // Debug function to check form state
+  const checkFormState = () => {
+    console.log("Current form state:", form.formState);
+    console.log("Form values:", form.getValues());
+    console.log("Form errors:", form.formState.errors);
+    console.log("Is form valid?", form.formState.isValid);
+  };
+
   const onSubmit = async (data: CoverLetterFormData) => {
+    console.log("Form submission started with data:", data);
+    
     try {
+      // Additional validation check
+      if (!data.jobTitle || !data.companyName || !data.jobDescription) {
+        console.error("Missing required fields");
+        return;
+      }
+      
+      console.log("Calling generateLetterFn with:", data);
       const result = await generateLetterFn(data);
+      console.log("Generated CoverLetter:", result);
+      if(!result){
+        throw new Error("Result is undefined");
+      }
       toast.success("Cover letter generated successfully!");
-      router.push(`/ai-cover-letter/${result.userId}`);
+      router.push(`/ai-cover-letter/${result._id}`);
     } catch (error: any) {
+      console.error("Error in submission:", error);
       toast.error(error.message || "Failed to generate cover letter");
     }
   };
@@ -43,8 +64,14 @@ export default function CoverLetterGenerator() {
     <div className="space-y-6">
       <div className="space-y-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form 
+            onSubmit={(e) => {
+              console.log("Form submit event triggered");
+              form.handleSubmit(onSubmit)(e);
+            }} 
+            className="space-y-4"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="companyName"
@@ -58,7 +85,6 @@ export default function CoverLetterGenerator() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="jobTitle"
@@ -73,7 +99,6 @@ export default function CoverLetterGenerator() {
                 )}
               />
             </div>
-
             <FormField
               control={form.control}
               name="jobDescription"
@@ -91,9 +116,15 @@ export default function CoverLetterGenerator() {
                 </FormItem>
               )}
             />
-
-            <div className="flex justify-end">
+            <div className="flex justify-between">
               <Button 
+                type="button" 
+                variant="outline" 
+                onClick={checkFormState}
+              >
+                Debug Form
+              </Button>
+              <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
               >

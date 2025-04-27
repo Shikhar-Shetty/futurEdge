@@ -1,7 +1,7 @@
 "use server";
 
 import dbConnect from "@/lib/dbConnect";
-import CoverLetterModel, { ICoverLetter } from "@/models/CoverLetter";
+import CoverLetterModel from "@/models/CoverLetter";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import ProfileModel from "@/models/Profile";
@@ -17,10 +17,23 @@ interface CoverLetterInput {
   jobDescription: string;
 }
 
-export async function generateCoverLetter(data: CoverLetterInput) {
+// Define a clean interface for serialized cover letter without Mongoose methods
+export interface SerializedCoverLetter {
+  _id: string;
+  content: string;
+  jobDescription: string;
+  companyName: string;
+  jobTitle: string;
+  status: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export async function generateCoverLetter(data: CoverLetterInput): Promise<SerializedCoverLetter> {
   console.log("Recieved Data:", data);
   
-    await dbConnect();
+  await dbConnect();
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error("Unauthorized");
@@ -62,17 +75,30 @@ export async function generateCoverLetter(data: CoverLetterInput) {
       companyName: data.companyName,
       jobTitle: data.jobTitle,
       status: "completed",
-      userId: session.user.id, // referencing Profile's ID
+      userId: userProfile._id, 
     });
 
-    return newCoverLetter;
+    // Create a clean serialized version
+    const serializedCoverLetter: SerializedCoverLetter = {
+      _id: newCoverLetter._id.toString(),
+      content: newCoverLetter.content,
+      jobDescription: newCoverLetter.jobDescription,
+      companyName: newCoverLetter.companyName,
+      jobTitle: newCoverLetter.jobTitle,
+      status: newCoverLetter.status,
+      userId: newCoverLetter.userId.toString(),
+      createdAt: newCoverLetter.createdAt,
+      updatedAt: newCoverLetter.updatedAt,
+    };
+    
+    return serializedCoverLetter;
   } catch (error: any) {
     console.error("Error generating cover letter:", error.message);
     throw new Error("Failed to generate cover letter");
   }
 }
 
-export async function getCoverLetters() {
+export async function getCoverLetters(): Promise<SerializedCoverLetter[]> {
   await dbConnect();
   
   const session = await getServerSession(authOptions);
@@ -81,54 +107,84 @@ export async function getCoverLetters() {
   const userProfile = await ProfileModel.findOne({ userId: session.user.id });
   if (!userProfile) throw new Error("Profile not found");
 
-  const coverLetters = await CoverLetterModel.find({ userId: userProfile._id }).sort({ createdAt: -1 }).lean();
+  // Use .lean() to return plain objects
+  const coverLetters = await CoverLetterModel.find({ userId: userProfile._id })
+    .sort({ createdAt: -1 })
+    .lean<SerializedCoverLetter[]>();  
   
-  // Explicitly cast to ICoverLetter[] if necessary
-  return coverLetters as unknown as ICoverLetter[];
+  const serialized = coverLetters.map(letter => {
+    return {
+      _id: letter._id.toString(),
+      content: letter.content,
+      jobDescription: letter.jobDescription || "",
+      companyName: letter.companyName,
+      jobTitle: letter.jobTitle,
+      status: letter.status,
+      userId: letter.userId.toString(),
+      createdAt: letter.createdAt,
+      updatedAt: letter.updatedAt,
+    } as SerializedCoverLetter;
+  });
+
+  return serialized;
 }
 
 
-
-export async function getCoverLetter(id: string): Promise<ICoverLetter | null > {
-  
-    await dbConnect();
-  
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) throw new Error("Unauthorized");
-  
-    const profile = await ProfileModel.findOne({ userId: session.user.id });
-    if (!profile) throw new Error("Profile not found");
-  
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid cover letter ID");
-    }
-
-    const coverLetter = await CoverLetterModel.findOne({
-     _id: id,
-      userId: session.user.id,
-    }).lean();
-  
-    if (!coverLetter) throw new Error("Cover letter not found or unauthorized");
-  
-    return coverLetter as unknown as ICoverLetter;
+export async function getCoverLetter(id: string): Promise<SerializedCoverLetter> {
+  if (!id) {
+    throw new Error("Cover letter ID is required");
   }
   
-  export async function deleteCoverLetter(id: string) {
+  await dbConnect();
 
-    await dbConnect();
-  
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) throw new Error("Unauthorized");
-  
-    const profile = await ProfileModel.findOne({ email: session.user.email });
-    if (!profile) throw new Error("Profile not found");
-  
-    const deleted = await CoverLetterModel.findOneAndDelete({
-      _id: id,
-      userId: profile._id,
-    });
-  
-    if (!deleted) throw new Error("Failed to delete or unauthorized");
-  
-    return { success: true, message: "Cover letter deleted successfully" };
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const profile = await ProfileModel.findOne({ userId: session.user.id });
+  if (!profile) throw new Error("Profile not found");
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid cover letter ID");
   }
+
+  const coverLetter = await CoverLetterModel.findOne({
+    _id: id,
+    userId: profile._id,
+  }).lean<SerializedCoverLetter>();
+
+  if (!coverLetter) throw new Error("Cover letter not found or unauthorized");
+
+  // Create a clean serialized version
+  const serialized: SerializedCoverLetter = {
+    _id: coverLetter._id.toString(),
+    content: coverLetter.content,
+    jobDescription: coverLetter.jobDescription,
+    companyName: coverLetter.companyName,
+    jobTitle: coverLetter.jobTitle,
+    status: coverLetter.status,
+    userId: coverLetter.userId.toString(),
+    createdAt: coverLetter.createdAt,
+    updatedAt: coverLetter.updatedAt,
+  };
+
+  return serialized;
+}
+
+export async function deleteCoverLetter(id: string) {
+  await dbConnect();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const profile = await ProfileModel.findOne({ userId: session.user.id });
+  if (!profile) throw new Error("Profile not found");
+
+  const deleted = await CoverLetterModel.findOneAndDelete({
+    _id: id,
+    userId: profile._id,
+  });
+
+  if (!deleted) throw new Error("Failed to delete or unauthorized");
+
+  return { success: true, message: "Cover letter deleted successfully" };
+}

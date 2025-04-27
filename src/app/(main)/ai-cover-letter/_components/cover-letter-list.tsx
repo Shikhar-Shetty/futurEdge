@@ -24,13 +24,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { deleteCoverLetter } from "../../../../../actions/cover-letter";
-import { ICoverLetter } from "@/models/CoverLetter";
+import { SerializedCoverLetter } from "../../../../../actions/cover-letter";
 
-
-
-// ✅ Define the prop types for the component
 interface CoverLetterListProps {
-  coverLetters: ICoverLetter[];
+  coverLetters: SerializedCoverLetter[];
 }
 
 export default function CoverLetterList({ coverLetters }: CoverLetterListProps) {
@@ -38,9 +35,9 @@ export default function CoverLetterList({ coverLetters }: CoverLetterListProps) 
 
   const handleDelete = async (id: string) => {
     try {
-        if(!id){
-            throw new Error("User doesnt exist")
-        }
+      if(!id){
+        throw new Error("Cover letter ID is required")
+      }
       await deleteCoverLetter(id);
       toast.success("Cover letter deleted successfully!");
       router.refresh();
@@ -65,7 +62,7 @@ export default function CoverLetterList({ coverLetters }: CoverLetterListProps) 
   return (
     <div className="space-y-4">
       {coverLetters.map((letter) => (
-        <Card key={letter.userId.toString()} className="group relative">
+        <Card key={letter._id} className="group relative">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div>
@@ -73,18 +70,18 @@ export default function CoverLetterList({ coverLetters }: CoverLetterListProps) 
                   {letter.jobTitle} at {letter.companyName}
                 </CardTitle>
                 <CardDescription>
-                  Created {format(new Date(letter.createdAt), "PPP")}
+                  Created {letter.createdAt ? format(new Date(letter.createdAt), "PPP") : "Unknown date"}
                 </CardDescription>
               </div>
               <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => router.push(`/ai-cover-letter/${letter._id}`)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
                 <AlertDialog>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => router.push(`/ai-cover-letter/${letter.userId}`)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="icon">
                       <Trash2 className="h-4 w-4" />
@@ -102,7 +99,7 @@ export default function CoverLetterList({ coverLetters }: CoverLetterListProps) 
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => handleDelete(letter.userId.toString())}
+                        onClick={() => handleDelete(letter._id)}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
                         Delete
