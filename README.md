@@ -1,40 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FuturEdge - AI Career Coach
 
-## Getting Started
+**FuturEdge** is an AI-powered career coach platform designed to guide users through their professional growth, offering tailored recommendations and resources based on their skills, career goals, and industry trends. The platform uses cutting-edge AI technology to help individuals make informed decisions about their careers and continuously improve their resumes, job applications, and skill sets.
 
-First, run the development server:
+> **Note:** This project is a **work-in-progress** and is continuously evolving as new features are integrated.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend:
+
+* Next.js (React)
+* TypeScript
+* Tailwind CSS
+* ShadCN UI
+* React Hook Form
+* Zod (form validation)
+* NextAuth.js (authentication)
+
+### Backend:
+
+* Node.js
+* MongoDB (with Mongoose)
+* JWT (authentication)
+
+### AI Integration:
+
+* Gemini AI
+
+---
+
+## ✨ Features
+
+* ✅ **User Profiles** – Manage skills, education, experience, and career goals.
+* ✅ **AI-Powered Career Advice** – Personalized career coaching using OpenAI.
+* ✅ **Resume Builder** – Generate professional resumes based on user profiles.
+* ✅ **Cover Letter Generator** – Create tailored cover letters powered by AI.
+* ✅ **Performance Chart** – Visual representation of user's skill assessments.
+* ✅ **Assessments Module** – Users can take skill-based assessments.
+* ✅ **Industry Insights Dashboard** – View salary trends, skill recommendations, and key role importance for your industry.
+* ✅ **Resume Feedback** – AI-enhanced suggestions to improve your resume.
+* ✅ **Job Application Tracker** – Keep track of jobs applied to, interview stages, etc.
+* ⏳ **Job Search Integration** – Pull jobs from platforms like LinkedIn & Indeed (Coming soon).
+* ⏳ **Skill Recommendations** – Personalized suggestions to upskill (Coming soon).
+* ⏳ **Analytics Dashboard** – Visualize career trends, progress, and gaps (Coming soon).
+
+---
+
+## 🚧 Project Status
+
+FuturEdge is currently under **active development**. While the core features are functional, enhancements and new modules are being added iteratively.
+
+---
+
+## 🧑‍💻 Getting Started
+
+### Prerequisites
+
+* Node.js and npm
+* MongoDB (Atlas or local)
+* Gemini AI Api Key
+* Modern browser
+
+---
+
+## 🚀 Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/futurEdge.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
+cd futurEdge
+```
+
+### 3. Install dependencies
+
+  ```bash
+  npm install
+```
+
+### 4. Set up environment variables
+
+Create a `.env` file in the root of the directory.
+
+#### Example variables:
+
+```env
+
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+GEMINIAI_API_KEY=your_openai_key
+NEXTAUTH_SECRET=your_secret
+```
+
+---
+
+### 5. Start the server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Runs at: [http://localhost:3000](http://localhost:3000)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Visit the App
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser to start using **FuturEdge**.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-
-Neon for PostgreSQL
-Inngest - For background Task processing
