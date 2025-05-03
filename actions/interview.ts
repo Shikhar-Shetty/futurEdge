@@ -17,7 +17,6 @@ export async function generateQuiz() {
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log("SESSION:", session);
 
   const userId = session.user.id;
   const profile = (await ProfileModel.findOne({
@@ -26,11 +25,11 @@ export async function generateQuiz() {
 
   const prompt = `
     Generate 10 technical interview questions for a 
-    ${profile?.industry} professional
+    ${profile?.industry} professional and sub-Industry${profile?.subIndustry}
     ${profile?.skills?.length ? ` with expertise in ${profile.skills.join(", ")}` : ""}.
     
     Each question should be multiple choice with 4 options.
-    
+    Give SubIndustry and skills based Questions, According to the recent interviews or most asked or most important
     Return the response in this JSON format only, no additional text:
     {
       "questions": [
@@ -70,7 +69,6 @@ export async function saveQuizResult(questions: Question[], answers: string[], s
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log(session);
 
   const userId = session.user.id;
 
@@ -121,18 +119,15 @@ export async function saveQuizResult(questions: Question[], answers: string[], s
       improvementTip,
     })
 
-    // Convert Mongoose document to plain object
     const plainAssessment = assessment.toObject();
     
-    // Optionally convert ObjectId to string if needed
     plainAssessment._id = plainAssessment._id.toString();
     plainAssessment.userId = plainAssessment.userId.toString();
     
-    // Convert any nested ObjectIds in questions array
     if (plainAssessment.questions) {
       plainAssessment.questions = plainAssessment.questions.map((q: { _id: { toString: () => any; }; }) => ({
         ...q,
-        _id: q._id?.toString() // If questions have their own _id
+        _id: q._id?.toString() 
       }));
     }
 

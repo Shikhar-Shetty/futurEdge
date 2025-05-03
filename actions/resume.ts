@@ -19,7 +19,6 @@ export async function saveResume(content: string): Promise<IResume> {
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log(session);
 
   const userId = session.user.id;
 
@@ -65,7 +64,6 @@ export async function getResume(): Promise<IResume | null> {
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log(session);
 
   const userId = session.user.id;
 
@@ -97,7 +95,6 @@ export async function improveWithAI({ current, type }: ImproveAIInput): Promise<
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log(session);
 
   const userId = session.user.id;
 
@@ -157,7 +154,7 @@ export async function generateAtsFeedback(userId: string, content: string) {
       - "feedback": An array of specific, actionable suggestions to improve the resume. Feedback should be concise and written in a professional tone.
 
     Do not include any commentary or text outside the JSON object.
-
+    And also ignore about the html tags used in the markdown
     Resume Content:
     """
     ${content}

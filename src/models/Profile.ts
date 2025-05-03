@@ -5,6 +5,7 @@ export interface Profile extends Document{
     name: string;
     imageUrl: string;
     industry: string;
+    subIndustry: string;
     bio?: string;
     experience: number;
     skills: string[];
@@ -30,6 +31,10 @@ const ProfileSchema: Schema<Profile> = new mongoose.Schema({
         type: String,
         required: true,
         
+    },
+    subIndustry: {
+        type: String,
+        required: true,
     },
     bio: {
         type: String

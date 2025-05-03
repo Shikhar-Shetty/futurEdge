@@ -45,11 +45,12 @@ export async function generateAIInsights(industry: string): Promise<Omit<Industr
       "keyTrends": ["string"],
       "recommendedSkills": ["string"]
     }
+    Give only 3 top Skills and let it have a short name
     Rules:
     1. Return ONLY the JSON
     2. Include 5 common roles
     3. Growth rate as percentage
-    4. Include 5 skills and trends
+    4. Include 7 skills and trends
   `;
 
   try {
@@ -71,9 +72,7 @@ export async function getIndustryInsights(): Promise<IndustryInsight> {
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
-  console.log(session);
   
-
   const userId = session.user.id;
   const profile = await ProfileModel.findOne({ userId }).lean() as Profile | null;
   
@@ -81,7 +80,6 @@ export async function getIndustryInsights(): Promise<IndustryInsight> {
     throw new Error("No industry selected");
   }
 
-  // Check for valid cached insights
   const existingInsight = await IndustryInsightModel.findOne({
     userId,
     nextUpdate: { $gt: new Date() }
@@ -102,10 +100,8 @@ export async function getIndustryInsights(): Promise<IndustryInsight> {
     };
   }
 
-  // Generate new insights
   const insightsData = await generateAIInsights(profile.industry);
 
-  // Update or create new insights
   const newInsight = await IndustryInsightModel.findOneAndUpdate(
     { userId },
     {

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
-// Define the shape of individual question review
 type QuestionReview = {
   question: string;
   answer: string;
@@ -14,7 +13,6 @@ type QuestionReview = {
   explanation: string;
 };
 
-// Define the result structure
 type QuizResultProps = {
   result: {
     _id: string;

@@ -19,13 +19,13 @@ function serializeProfile(profile: Profile) {
 export async function completeOnboarding(data: {
     name: string;
     industry: string;
+    subIndustry: string;
     skills: string[];
     experience: number;
     bio?: string;
 }){
     await dbConnect()
     const session = await getServerSession(authOptions)
-    console.log(session);
     
     if(!session?.user?.id) throw new Error("Unauthorized");
 
@@ -35,6 +35,7 @@ export async function completeOnboarding(data: {
             name: data.name || "",
             imageUrl: session.user.image || "",
             industry: data.industry,
+            subIndustry: data.subIndustry,
             skills: data.skills,
             experience: data.experience,
             bio: data.bio
@@ -42,7 +43,6 @@ export async function completeOnboarding(data: {
         {upsert: true, new: true, lean: true}
     ) as unknown as Profile | null;
 
-    console.log(profile);
     await AssessmentModel.findOneAndUpdate(
         {userId: session.user.id},
         {category: data.industry},
@@ -57,7 +57,6 @@ export async function completeOnboarding(data: {
 export async function getUserOnboardingStatus(userId: string) {
     await dbConnect()
     const profile = await ProfileModel.findOne({userId}).lean() as Profile | null;
-    console.log(profile)
     return {
         isOnboarded: !!profile?.industry,
         profileExists: profile || null

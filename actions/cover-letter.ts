@@ -17,7 +17,6 @@ interface CoverLetterInput {
   jobDescription: string;
 }
 
-// Define a clean interface for serialized cover letter without Mongoose methods
 export interface SerializedCoverLetter {
   _id: string;
   content: string;
@@ -31,7 +30,6 @@ export interface SerializedCoverLetter {
 }
 
 export async function generateCoverLetter(data: CoverLetterInput): Promise<SerializedCoverLetter> {
-  console.log("Recieved Data:", data);
   
   await dbConnect();
 
@@ -43,13 +41,15 @@ export async function generateCoverLetter(data: CoverLetterInput): Promise<Seria
 
   const prompt = `
     Write a professional cover letter for a ${data.jobTitle} position at ${data.companyName}.
-
+    Keep the name to be ${userProfile.name}
     About the candidate:
     - Industry: ${userProfile.industry}
     - Years of Experience: ${userProfile.experience}
     - Skills: ${userProfile.skills.join(", ")}
     - Professional Background: ${userProfile.bio}
 
+    Give the current date
+    Don't Keep Anything Empty
     Job Description:
     ${data.jobDescription}
 
@@ -78,7 +78,6 @@ export async function generateCoverLetter(data: CoverLetterInput): Promise<Seria
       userId: userProfile._id, 
     });
 
-    // Create a clean serialized version
     const serializedCoverLetter: SerializedCoverLetter = {
       _id: newCoverLetter._id.toString(),
       content: newCoverLetter.content,
@@ -107,7 +106,6 @@ export async function getCoverLetters(): Promise<SerializedCoverLetter[]> {
   const userProfile = await ProfileModel.findOne({ userId: session.user.id });
   if (!userProfile) throw new Error("Profile not found");
 
-  // Use .lean() to return plain objects
   const coverLetters = await CoverLetterModel.find({ userId: userProfile._id })
     .sort({ createdAt: -1 })
     .lean<SerializedCoverLetter[]>();  
@@ -154,7 +152,6 @@ export async function getCoverLetter(id: string): Promise<SerializedCoverLetter>
 
   if (!coverLetter) throw new Error("Cover letter not found or unauthorized");
 
-  // Create a clean serialized version
   const serialized: SerializedCoverLetter = {
     _id: coverLetter._id.toString(),
     content: coverLetter.content,
