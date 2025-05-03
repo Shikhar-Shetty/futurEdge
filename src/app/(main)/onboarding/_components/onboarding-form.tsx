@@ -5,21 +5,29 @@ import { useRouter } from "next/navigation"
 import { completeOnboarding } from "../../../../../actions/user"
 import { industries } from '../../../../../data/industries';
 
-interface onBoardingFormProps{
+interface onBoardingFormProps {
     userId: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function OnboardingForm({userId}:onBoardingFormProps) {
+export function OnboardingForm({ userId }: onBoardingFormProps) {
     const router = useRouter()
     const [formData, setFormData] = useState({
         name: "",
         industry: "Technology",
+        subIndustry: "",
         skills: [] as string[],
         experience: 0,
         bio: ""
     });
-    
+    const [subIndustries, setSubIndustries] = useState<string[]>([])
+
+    const handleIndustryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedIndustry = e.target.value;
+        const industryData = industries.find((ind) => ind.id === selectedIndustry);
+        setFormData({ ...formData, industry: selectedIndustry, subIndustry: "" });
+        setSubIndustries(industryData?.subIndustries || []);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -49,7 +57,7 @@ export function OnboardingForm({userId}:onBoardingFormProps) {
                 <label className="block mb-2">Industry</label>
                 <select
                     value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                    onChange={handleIndustryChange}
                     className="w-full p-2 border rounded"
                     required
                 >
@@ -58,9 +66,28 @@ export function OnboardingForm({userId}:onBoardingFormProps) {
                             {ind.name}
                         </option>
                     })}
-                    
                 </select>
             </div>
+            {subIndustries.length>0 && (
+                <div>
+                    <label className="block mb-2">Specialization</label>
+                    <select
+                        value={formData.subIndustry}
+                        onChange={(e) => setFormData({ ...formData, subIndustry: e.target.value })}
+                        className="w-full p-2 border rounded"
+                        required
+                    >
+                        {subIndustries.map((ind) => {
+                            return <option key={ind} value={ind}>
+                                {ind}
+                            </option>
+                        })}
+
+                    </select>
+                </div>
+            )}
+
+
 
             <div>
                 <label className="block mb-2">Skills (comma separated)</label>

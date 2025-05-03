@@ -1,5 +1,9 @@
 export const industries = [
     {
+      id: "industry",
+      name: "Industry"
+    },
+    {
       id: "tech",
       name: "Technology",
       subIndustries: [

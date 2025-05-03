@@ -5,7 +5,6 @@ export interface User extends Document{
     username: string;
     email: string;
     password: string;
-    IndustryInsights: mongoose.Schema.Types.ObjectId;
 }
 
 const UserSchema: Schema<User> = new mongoose.Schema({

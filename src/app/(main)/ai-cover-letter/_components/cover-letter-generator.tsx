@@ -28,19 +28,11 @@ export default function CoverLetterGenerator() {
     }
   });
 
-  // Debug function to check form state
-  const checkFormState = () => {
-    console.log("Current form state:", form.formState);
-    console.log("Form values:", form.getValues());
-    console.log("Form errors:", form.formState.errors);
-    console.log("Is form valid?", form.formState.isValid);
-  };
 
   const onSubmit = async (data: CoverLetterFormData) => {
     console.log("Form submission started with data:", data);
     
     try {
-      // Additional validation check
       if (!data.jobTitle || !data.companyName || !data.jobDescription) {
         console.error("Missing required fields");
         return;
@@ -117,13 +109,7 @@ export default function CoverLetterGenerator() {
               )}
             />
             <div className="flex justify-between">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={checkFormState}
-              >
-                Debug Form
-              </Button>
+
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}

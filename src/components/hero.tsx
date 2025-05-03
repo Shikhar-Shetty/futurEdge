@@ -52,9 +52,9 @@ function HeroSection() {
             <div className='hero-image-wrapper mt-5 md:mt-0'> 
                 <div ref={imageRef} className='hero-image'>
                     <Image
-                    src={"/AI Banner.jpg"}
-                    width={800}
-                    height={750}
+                    src={"/AI Banner.png"}
+                    width={850}
+                    height={300}
                     alt="Dashboard Preview"
                     className='rounded-md shadow-2xl border bg-cover mx-auto'
                     priority/>
