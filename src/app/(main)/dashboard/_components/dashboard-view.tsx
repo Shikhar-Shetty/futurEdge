@@ -57,12 +57,11 @@ interface ChartData {
 }
 
 interface MarketOutlookInfo {
-  icon: Icon;
+  icon: typeof Icon;
   color: string;
 }
 
 const DashboardView = ({ insights }: { insights: DashboardInsights }) => {
-  // Transform salary data for the chart
   const salaryData: ChartData[] = insights.salaryRanges.map((range) => ({
     name: range.role,
     min: range.min / 1000,
@@ -100,7 +99,6 @@ const DashboardView = ({ insights }: { insights: DashboardInsights }) => {
     insights.marketOutlook
   );
 
-  // Format dates using date-fns
   const lastUpdatedDate = new Date(insights.updatedAt);
   const nextUpdateDate = new Date(insights.nextUpdate);
 
@@ -138,7 +136,7 @@ const DashboardView = ({ insights }: { insights: DashboardInsights }) => {
               <CardTitle className="text-sm font-medium">
                 Market Outlook
               </CardTitle>
-              <OutlookIcon className={`h-4 w-4 ${outlookColor}`} />
+              <OutlookIcon className={`h-4 w-4 ${outlookColor}`} iconNode={[]} />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold capitalize">
