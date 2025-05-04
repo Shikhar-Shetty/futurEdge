@@ -16,9 +16,9 @@ interface SanitizedInsights {
     location: string;
   }>;
   growthRate: number;
-  demandLevel: string;
+  demandLevel: "High" | "Medium" | "Low";
   topSkills: string[];
-  marketOutlook: string;
+  marketOutlook: "Positive" | "Neutral" | "Negative";
   keyTrends: string[];
   recommendedSkills: string[];
   updatedAt: string;
