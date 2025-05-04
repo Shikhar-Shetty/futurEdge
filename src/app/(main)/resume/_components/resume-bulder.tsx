@@ -527,10 +527,10 @@ const handleGenerateAIReview = async () => {
         </TabsContent>
         </Tabs>
         <div>
-          <div className="p-4 mt-4 my-4 rounded-xl bg-gray-100 text-gray-800 text-md shadow-md">
+          <div className="p-4 mt-8 my-4 rounded-xl bg-muted/50 text-gray-200 text-md shadow-md">
             <h3 className="text-lg font-medium">📊 ATS Score: {atsScore ?? "Not generated"}</h3>
             <h4 className="text-lg font-medium mt-2">🧠 Feedback:</h4>
-            <p className="text-gray-700 whitespace-pre-line">{feedback ?? "No feedback yet."}</p>
+            <p className="text-gray-200 whitespace-pre-line">{feedback ?? "No feedback yet."}</p>
           </div>
           <Button 
             className="bg-green-600 text-white hover:bg-green-500" 
