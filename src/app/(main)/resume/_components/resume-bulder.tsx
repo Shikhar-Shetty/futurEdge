@@ -526,27 +526,29 @@ const handleGenerateAIReview = async () => {
           </div>
         </TabsContent>
         </Tabs>
+      {activeTab=="preview" &&(
         <div>
           <div className="p-4 mt-8 my-4 rounded-xl bg-muted/50 text-gray-200 text-md shadow-md">
             <h3 className="text-lg font-medium">📊 ATS Score: {atsScore ?? "Not generated"}</h3>
             <h4 className="text-lg font-medium mt-2">🧠 Feedback:</h4>
             <p className="text-gray-200 whitespace-pre-line">{feedback ?? "No feedback yet."}</p>
           </div>
-          <Button 
-            className="bg-green-600 text-white hover:bg-green-500" 
-            onClick={handleGenerateAIReview}
-            disabled={isGenerating}
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating Feedback...
-              </>
-            ) : (
-              "Generate ATS Feedback"
-            )}
-          </Button>  
+            <Button 
+              className="bg-green-600 text-white hover:bg-green-500" 
+              onClick={handleGenerateAIReview}
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating Feedback...
+                </>
+              ) : (
+                "Generate ATS Feedback"
+              )}
+            </Button>  
         </div>
+      )}
     </div>
   );
 }

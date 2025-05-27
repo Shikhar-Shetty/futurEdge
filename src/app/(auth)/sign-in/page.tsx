@@ -1,17 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { User, Lock } from "lucide-react";
+import { useSession } from 'next-auth/react';
 
 export default function SignInPage() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
+    }
+  }, [session]);
+
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

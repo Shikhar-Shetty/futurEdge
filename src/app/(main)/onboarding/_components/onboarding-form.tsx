@@ -58,7 +58,7 @@ export function OnboardingForm({ userId }: onBoardingFormProps) {
                 <select
                     value={formData.industry}
                     onChange={handleIndustryChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border bg-background/80 rounded"
                     required
                 >
                     {industries.map((ind) => {
@@ -74,7 +74,7 @@ export function OnboardingForm({ userId }: onBoardingFormProps) {
                     <select
                         value={formData.subIndustry}
                         onChange={(e) => setFormData({ ...formData, subIndustry: e.target.value })}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 bg-background/80 border rounded"
                         required
                     >
                         {subIndustries.map((ind) => {

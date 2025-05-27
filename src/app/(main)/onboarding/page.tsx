@@ -15,7 +15,7 @@ const OnboardingPage = async () => {
         <>
             <div className="max-w-2xl mx-auto p-6">
                 <h1 className="text-3xl font-bold mb-6">Career Profile Setup</h1>
-                <p className="mb-8 text-gray-600">
+                <p className="mb-8 text-gray-300">
                     Complete your profile to unlock AI-generated career insights,
                     resume suggestions, and personalized quizzes.
                 </p>
