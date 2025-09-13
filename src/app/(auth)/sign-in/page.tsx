@@ -17,6 +17,8 @@ export default function SignInPage() {
         router.push('/dashboard');
       }, 100);
     }
+    if(session?.user?.email) router.push('/onboarding');
+    console.log(session);
   }, [session]);
 
   const [identifier, setIdentifier] = useState("");

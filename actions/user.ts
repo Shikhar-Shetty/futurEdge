@@ -53,7 +53,6 @@ export async function completeOnboarding(data: {
     return serializeProfile(profile);
 }
 
-
 export async function getUserOnboardingStatus(userId: string) {
     await dbConnect()
     const profile = await ProfileModel.findOne({userId}).lean() as Profile | null;
